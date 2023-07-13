@@ -13,7 +13,15 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+    // screenOptions={{
+    //   tabBarStyle: {
+    //     backgroundColor: "#0A193D",
+    //   },
+    //   tabBarActiveTintColor: "white",
+    //   tabBarInactiveTintColor: "#615F82",
+    // }}
+    >
       <Tab.Screen
         name="Violations"
         component={ViolationsScreen}

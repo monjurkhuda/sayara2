@@ -78,15 +78,13 @@ const styles = StyleSheet.create({
   secondLine: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: 4,
   },
   secondLineUnit: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 3,
   },
   violation_div: {
     display: "flex",
@@ -99,6 +97,9 @@ const styles = StyleSheet.create({
     gap: 10,
     borderRadius: 30,
     letterSpacing: 2,
+    // shadowColor: "black",
+    // shadowOpacity: 0.04,
+    // shadowOffset: { width: 0, height: 2 },
   },
   boldText: {
     fontWeight: "700",
