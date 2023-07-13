@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, Modal } from "react-native";
 import { supabase } from "../lib/supabase";
 
 export default function FleetScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     getVehicles();
@@ -35,16 +36,27 @@ export default function FleetScreen() {
           </View>
         </View>
       ))}
+
       <Pressable style={styles.add_button}>
-        <Text style={styles.add_button_text}>+ Add Vehicle</Text>
+        <Text
+          style={styles.add_button_text}
+          onPress={() => setModalVisible(true)}
+        >
+          + Add Vehicle
+        </Text>
       </Pressable>
+      <Modal style={styles.modalContainer} visible={modalVisible}>
+        <Text>Modal Here!</Text>
+        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+          <Text>Hide Modal</Text>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     flex: 1,
     alignItems: "center",
     backgroundColor: "#fff",
@@ -89,5 +101,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+  },
+  modalContainer: {
+    padding: 20,
+    backgroundColor: "yellow",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
