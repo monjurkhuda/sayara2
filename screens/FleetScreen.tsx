@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Pressable, Modal } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Modal,
+  Button,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { supabase } from "../lib/supabase";
+import { Input } from "react-native-elements";
+import ColorChoiceInput from "../components/ColorChoiceInput";
+import CarInputSystem from "../components/CarInputSystem";
 
 export default function FleetScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
@@ -27,7 +40,7 @@ export default function FleetScreen() {
           <View style={styles.fleet_div_text}>
             <Text>{v.plate}</Text>
             <Text>
-              {v.make} {v.model} {v.year}
+              {v.color} {v.make} {v.model} {v.year}
             </Text>
             <Text>
               {v.date} {v.time}
@@ -45,11 +58,20 @@ export default function FleetScreen() {
           + Add Vehicle
         </Text>
       </Pressable>
-      <Modal style={styles.modalContainer} visible={modalVisible}>
-        <Text>Modal Here!</Text>
-        <Pressable onPress={() => setModalVisible(!modalVisible)}>
-          <Text>Hide Modal</Text>
-        </Pressable>
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <ColorChoiceInput />
+              <CarInputSystem />
+
+              <Text>Modal Here!</Text>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <Text>Hide Modal</Text>
+              </Pressable>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -102,10 +124,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "white",
   },
-  modalContainer: {
-    padding: 20,
-    backgroundColor: "yellow",
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 8,
+    maxWidth: "94%",
   },
 });
