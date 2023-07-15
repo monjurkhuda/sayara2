@@ -146,7 +146,7 @@ const CarChoiceInput = () => {
           <DatePicker
             height={70}
             fontSize={18}
-            startYear={2022}
+            startYear={2000}
             value={lastInspection}
             onChange={(value) => setLastInspection(value)}
             format="mm-yyyy"
@@ -161,7 +161,7 @@ const CarChoiceInput = () => {
       {curr == "details" && lastInspection && (
         <Button
           title={"Add Car"}
-          onPress={() => console.log("Add Car")}
+          onPress={() => console.log("Add Vehicle")}
         ></Button>
       )}
     </View>

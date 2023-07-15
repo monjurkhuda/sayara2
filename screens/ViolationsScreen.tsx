@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
   violation_div: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#F7F6F9",
+    backgroundColor: "white",
     marginTop: 14,
     marginLeft: 14,
     marginRight: 14,
     padding: 20,
-    gap: 10,
+    gap: 8,
     borderRadius: 30,
     letterSpacing: 2,
     // shadowColor: "black",
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     // shadowOffset: { width: 0, height: 2 },
   },
   boldText: {
+    flex: 1,
     fontWeight: "700",
   },
   ezpassCircle: {
