@@ -23,10 +23,12 @@ export default function EzpassesScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [ezNumber, setEzNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [selectedVehicle, setSelectedVehicle] = useState();
 
   useEffect(() => {
     getEzpasses();
+    getVehicles();
   }, []);
 
   async function getEzpasses() {
@@ -35,6 +37,21 @@ export default function EzpassesScreen() {
       .select(`*, vehicles(color, make, model, year, plate)`);
 
     setEzpasses(ezpasses);
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async function getVehicles() {
+    let { data: vehicles, error } = await supabase
+      .from("vehicles")
+      .select("*")
+      .eq("owner_id", "226bf2c9-1917-448c-967c-cda0da46ddd9");
+
+    setVehicles(vehicles);
+
+    console.log(vehicles);
 
     if (error) {
       throw error;
@@ -108,8 +125,12 @@ export default function EzpassesScreen() {
                   setSelectedVehicle(itemValue)
                 }
               >
-                <Picker.Item label="Java" value="java" />
-                <Picker.Item label="JavaScript" value="js" />
+                {vehicles?.map((v) => (
+                  <Picker.Item
+                    label={`${v.color} ${v.make} ${v.model} ${v.year}`}
+                    value={v.id}
+                  />
+                ))}
               </Picker>
 
               {ezNumber && password && (
