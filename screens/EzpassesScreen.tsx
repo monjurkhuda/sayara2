@@ -16,12 +16,14 @@ import { supabase } from "../lib/supabase";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
+import { Picker } from "@react-native-picker/picker";
 
 export default function EzpassesScreen() {
   const [ezpasses, setEzpasses] = useState<any[] | null>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [ezNumber, setEzNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [selectedVehicle, setSelectedVehicle] = useState();
 
   useEffect(() => {
     getEzpasses();
@@ -32,16 +34,12 @@ export default function EzpassesScreen() {
       .from("ezpasses")
       .select(`*, vehicles(color, make, model, year, plate)`);
 
-    console.log(ezpasses);
-
     setEzpasses(ezpasses);
 
     if (error) {
       throw error;
     }
   }
-
-  console.log(ezpasses);
 
   return (
     <ScrollView style={styles.container}>
@@ -101,6 +99,18 @@ export default function EzpassesScreen() {
                 placeholderTextColor="gray"
                 secureTextEntry={true}
               />
+
+              <Text>Choose Car:</Text>
+
+              <Picker
+                selectedValue={selectedVehicle}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedVehicle(itemValue)
+                }
+              >
+                <Picker.Item label="Java" value="java" />
+                <Picker.Item label="JavaScript" value="js" />
+              </Picker>
 
               {ezNumber && password && (
                 <View style={styles.modal_button}>
