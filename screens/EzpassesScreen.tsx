@@ -8,6 +8,8 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Keyboard,
+  TextInput,
+  Button,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
@@ -18,6 +20,8 @@ import { Divider } from "react-native-elements";
 export default function EzpassesScreen() {
   const [ezpasses, setEzpasses] = useState<any[] | null>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [ezNumber, setEzNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     getEzpasses();
@@ -40,23 +44,6 @@ export default function EzpassesScreen() {
   console.log(ezpasses);
 
   return (
-    // <View style={styles.container}>
-    //   {ezpasses?.map((e) => (
-    //     <View style={styles.fleet_div}>
-    //       <View style={styles.fleet_div_text}>
-    //         <Text>{e.number}</Text>
-    //         <Text>
-    //           Vehicle: {e.vehicles.color} {e.vehicles.make} {e.vehicles.model}{" "}
-    //           {e.vehicles.year} ({e.vehicles.plate})
-    //         </Text>
-    //       </View>
-    //     </View>
-    //   ))}
-    //   <Pressable style={styles.add_button}>
-    //     <Text style={styles.add_button_text}>+ Add EZ-Pass</Text>
-    //   </Pressable>
-    // </View>
-
     <ScrollView style={styles.container}>
       {ezpasses?.map((e) => (
         <View style={styles.fleet_div}>
@@ -97,6 +84,29 @@ export default function EzpassesScreen() {
               <Pressable onPress={() => setModalVisible(false)}>
                 <Text>Cancel</Text>
               </Pressable>
+
+              <TextInput
+                style={styles.input}
+                onChangeText={setEzNumber}
+                value={ezNumber}
+                placeholder="EZ-Pass Number"
+                placeholderTextColor="gray"
+              />
+
+              <TextInput
+                style={styles.input}
+                onChangeText={setPassword}
+                value={password}
+                placeholder="Account Password"
+                placeholderTextColor="gray"
+                secureTextEntry={true}
+              />
+
+              {ezNumber && password && (
+                <View style={styles.modal_button}>
+                  <Button title={"Add EZ-Pass"} color={"white"}></Button>
+                </View>
+              )}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -201,5 +211,18 @@ const styles = StyleSheet.create({
     marginTop: 100,
     borderRadius: 8,
     width: "94%",
+  },
+  input: {
+    height: 50,
+    margin: 6,
+    borderWidth: 1,
+    padding: 10,
+  },
+  modal_button: {
+    backgroundColor: "purple",
+    marginTop: 10,
+    width: 200,
+    alignSelf: "center",
+    borderRadius: 30,
   },
 });
