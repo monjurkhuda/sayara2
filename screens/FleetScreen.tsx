@@ -12,8 +12,7 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Input } from "react-native-elements";
-import ColorChoiceInput from "../components/ColorChoiceInput";
-import CarInputSystem from "../components/CarInputSystem";
+import CarChoiceInput from "../components/CarChoiceInput";
 
 export default function FleetScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
@@ -62,13 +61,10 @@ export default function FleetScreen() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
-              <ColorChoiceInput />
-              <CarInputSystem />
-
-              <Text>Modal Here!</Text>
               <Pressable onPress={() => setModalVisible(false)}>
-                <Text>Hide Modal</Text>
+                <Text>Cancel</Text>
               </Pressable>
+              <CarChoiceInput />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -127,13 +123,14 @@ const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   modalContainer: {
     backgroundColor: "white",
     padding: 20,
+    marginTop: 100,
     borderRadius: 8,
-    maxWidth: "94%",
+    width: "94%",
   },
 });
