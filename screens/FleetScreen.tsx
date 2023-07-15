@@ -7,6 +7,7 @@ import {
   Modal,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
@@ -30,7 +31,7 @@ export default function FleetScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {vehicles?.map((v) => (
         <View style={styles.fleet_div}>
           <View style={styles.fleet_div_text}>
@@ -67,7 +68,7 @@ export default function FleetScreen() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 

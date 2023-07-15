@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Divider } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,7 +28,7 @@ export default function ViolationsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {violations?.map((v) => (
         <View style={styles.violation_div}>
           <View style={styles.firstLine}>
@@ -61,7 +61,7 @@ export default function ViolationsScreen() {
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
