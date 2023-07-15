@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import { Divider } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
@@ -31,15 +32,15 @@ export default function ViolationsScreen() {
       {violations?.map((v) => (
         <View style={styles.violation_div}>
           <View style={styles.firstLine}>
-            <View
-              style={
-                v.category == "ezpass"
-                  ? styles.ezpassCircle
-                  : styles.trafficCircle
-              }
-            >
-              <Text style={styles.circleText}>EZ</Text>
-            </View>
+            {v.category == "ezpass" ? (
+              <View style={styles.ezpassCircle}>
+                <Text style={styles.circleText}>EZ</Text>
+              </View>
+            ) : (
+              <View style={styles.trafficCircle}>
+                <Entypo name="traffic-cone" size={20} color="white" />
+              </View>
+            )}
             <Text style={styles.boldText}>{v.description}</Text>
             <Text>${v.payment_due}</Text>
           </View>
@@ -109,8 +110,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: 30,
-    height: 30,
+    width: 34,
+    height: 34,
     backgroundColor: "purple",
     borderRadius: 100,
   },
@@ -118,8 +119,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: 30,
-    height: 30,
+    width: 34,
+    height: 34,
     backgroundColor: "gray",
     borderRadius: 100,
   },
