@@ -44,14 +44,17 @@ export default function FleetScreen() {
         </View>
       ))}
 
-      <Pressable style={styles.add_button}>
-        <Text
-          style={styles.add_button_text}
-          onPress={() => setModalVisible(true)}
-        >
-          + Add Vehicle
-        </Text>
-      </Pressable>
+      <View style={styles.button_container}>
+        <Pressable style={styles.add_button}>
+          <Text
+            style={styles.add_button_text}
+            onPress={() => setModalVisible(true)}
+          >
+            + Add Vehicle
+          </Text>
+        </Pressable>
+      </View>
+
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalBackground}>
@@ -71,8 +74,7 @@ export default function FleetScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#EEF0F4",
   },
   car_image: {
     width: 100,
@@ -81,32 +83,33 @@ const styles = StyleSheet.create({
   },
   fleet_div: {
     display: "flex",
-    flexDirection: "row",
-    width: "94%",
+    flexDirection: "column",
     backgroundColor: "white",
-    margin: 8,
-    padding: 8,
-    gap: 10,
-    borderRadius: 10,
+    marginTop: 14,
+    marginLeft: 14,
+    marginRight: 14,
+    padding: 20,
+    gap: 8,
+    borderRadius: 30,
     letterSpacing: 2,
-    borderBottomColor: "gray",
-    borderBottomWidth: 4,
-    borderWidth: 1,
-    borderColor: "lightgray",
-    fontWeight: "900",
   },
   fleet_div_text: {
     display: "flex",
+  },
+  button_container: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    marginTop: 20,
   },
   add_button: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
+    borderRadius: 30,
     width: 200,
-    backgroundColor: "green",
+    backgroundColor: "#0B183D",
   },
   add_button_text: {
     fontSize: 16,
