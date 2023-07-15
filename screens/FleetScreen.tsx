@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
+import { Divider } from "react-native-elements";
 
 export default function FleetScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
@@ -34,13 +37,26 @@ export default function FleetScreen() {
     <ScrollView style={styles.container}>
       {vehicles?.map((v) => (
         <View style={styles.fleet_div}>
-          <View style={styles.fleet_div_text}>
-            <Text>{v.plate}</Text>
-            <Text>
-              {v.color.toUpperCase()} {v.make} {v.model} {v.year}
+          <View style={styles.firstLine}>
+            <View>
+              <FontAwesome5 name="car-side" size={24} color={v.color} />
+            </View>
+            <Text style={styles.boldText}>
+              {v.make} {v.model} {v.year}
             </Text>
-            <Text>Reg. Expires: {v.reg_expires}</Text>
-            <Text>Last Inspection: {v.last_inspection}</Text>
+            <EvilIcons name="credit-card" size={24} color="black" />
+            <Text>{v.plate}</Text>
+          </View>
+          <Divider />
+          <View style={styles.secondLine}>
+            <View style={styles.secondLineUnit}>
+              <FontAwesome5 name="exclamation-circle" size={16} color="black" />
+              <Text>Reg. Expires: {v.reg_expires}</Text>
+            </View>
+            <View style={styles.secondLineUnit}>
+              <FontAwesome5 name="wrench" size={16} color="black" />
+              <Text>Last Inspection: {v.last_inspection}</Text>
+            </View>
           </View>
         </View>
       ))}
@@ -131,5 +147,46 @@ const styles = StyleSheet.create({
     marginTop: 100,
     borderRadius: 8,
     width: "94%",
+  },
+
+  firstLine: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  secondLine: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 6,
+  },
+  secondLineUnit: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  violation_div: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "white",
+    marginTop: 14,
+    marginLeft: 14,
+    marginRight: 14,
+    padding: 20,
+    gap: 8,
+    borderRadius: 30,
+    letterSpacing: 2,
+    // shadowColor: "black",
+    // shadowOpacity: 0.04,
+    // shadowOffset: { width: 0, height: 2 },
+  },
+  boldText: {
+    flex: 1,
+    fontWeight: "700",
+  },
+  circleText: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 14,
   },
 });
