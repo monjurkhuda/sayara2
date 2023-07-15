@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import DatePicker from "@dietime/react-native-date-picker";
 import { Button } from "react-native-elements";
+import { supabase } from "../lib/supabase";
 
 const CarChoiceInput = () => {
   const [selectedColor, setSelectedColor] = useState("");
@@ -36,6 +37,26 @@ const CarChoiceInput = () => {
     setSelectedColor(color);
     setCurr("info");
   };
+
+  async function addVehicle() {
+    const { data, error } = await supabase
+      .from("vehicles")
+      .insert([
+        {
+          color: selectedColor,
+          make: make,
+          model: model,
+          year: year?.getFullYear().toString(),
+          plate: plate.toUpperCase(),
+          reg_expires: registrationExpires,
+          last_inspection: lastInspection,
+        },
+      ])
+      .select();
+
+    console.log(data);
+    console.log(error);
+  }
 
   return (
     <View style={styles.container}>
@@ -159,10 +180,7 @@ const CarChoiceInput = () => {
       )}
 
       {curr == "details" && lastInspection && (
-        <Button
-          title={"Add Car"}
-          onPress={() => console.log("Add Vehicle")}
-        ></Button>
+        <Button title={"Add Car"} onPress={addVehicle}></Button>
       )}
     </View>
   );

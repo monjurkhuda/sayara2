@@ -3,15 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Pressable,
   Modal,
-  Button,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
 import { supabase } from "../lib/supabase";
-import { Input } from "react-native-elements";
 import CarChoiceInput from "../components/CarChoiceInput";
 
 export default function FleetScreen() {
