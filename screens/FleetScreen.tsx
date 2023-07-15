@@ -36,12 +36,10 @@ export default function FleetScreen() {
           <View style={styles.fleet_div_text}>
             <Text>{v.plate}</Text>
             <Text>
-              {v.color} {v.make} {v.model} {v.year}
-            </Text>
-            <Text>
-              {v.date} {v.time}
+              {v.color.toUpperCase()} {v.make} {v.model} {v.year}
             </Text>
             <Text>Reg. Expires: {v.reg_expires}</Text>
+            <Text>Last Inspection: {v.last_inspection}</Text>
           </View>
         </View>
       ))}
@@ -61,7 +59,7 @@ export default function FleetScreen() {
               <Pressable onPress={() => setModalVisible(false)}>
                 <Text>Cancel</Text>
               </Pressable>
-              <CarChoiceInput />
+              <CarChoiceInput setModalVisible={setModalVisible} />
             </View>
           </View>
         </TouchableWithoutFeedback>

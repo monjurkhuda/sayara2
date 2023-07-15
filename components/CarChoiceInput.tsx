@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,10 @@ import {
 import DatePicker from "@dietime/react-native-date-picker";
 import { Button } from "react-native-elements";
 import { supabase } from "../lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
-const CarChoiceInput = () => {
+const CarChoiceInput = ({ setModalVisible }) => {
+  const [session, setSession] = useState<Session | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
   const [plate, setPlate] = useState<string>("");
   const [make, setMake] = useState<string>("");
@@ -19,6 +21,12 @@ const CarChoiceInput = () => {
   const [registrationExpires, setRegistrationExpires] = useState<Date>();
   const [lastInspection, setLastInspection] = useState<Date>();
   const [curr, setCurr] = useState<string>("color");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+  }, []);
 
   const colorOptions = [
     "black",
@@ -50,12 +58,15 @@ const CarChoiceInput = () => {
           plate: plate.toUpperCase(),
           reg_expires: registrationExpires,
           last_inspection: lastInspection,
+          owner_id: session?.user.id,
         },
       ])
       .select();
 
     console.log(data);
     console.log(error);
+
+    setModalVisible(false);
   }
 
   return (
