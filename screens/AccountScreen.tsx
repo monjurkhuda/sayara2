@@ -40,7 +40,7 @@ export default function AccountScreen({ session }: { session: Session }) {
 
   return (
     <View style={styles.container}>
-      <Text>Hello, {username}</Text>
+      {/* <Text>Hello, {username}</Text> */}
       <View>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>

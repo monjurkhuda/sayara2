@@ -26,7 +26,7 @@ export default function EzpassesScreen({ session }: { session: Session }) {
   const [password, setPassword] = useState<string>("");
   const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedVehicle, setSelectedVehicle] = useState();
+  const [selectedVehicle, setSelectedVehicle] = useState<string>();
 
   useEffect(() => {
     if (session) {
@@ -108,15 +108,12 @@ export default function EzpassesScreen({ session }: { session: Session }) {
       },
     ]);
 
+    console.log(error);
+
     setModalVisible(false);
     setEzNumber("");
     setPassword("");
-  }
-
-  console.log(ezpasses);
-
-  if (loading) {
-    return <></>;
+    setSelectedVehicle("0");
   }
 
   return (
@@ -187,10 +184,13 @@ export default function EzpassesScreen({ session }: { session: Session }) {
                   <Text>Choose Car:</Text>
                   <Picker
                     selectedValue={selectedVehicle}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedVehicle(itemValue)
-                    }
+                    onValueChange={(itemValue, itemIndex) => {
+                      if (itemValue !== 0) {
+                        setSelectedVehicle(itemValue);
+                      }
+                    }}
                   >
+                    <Picker.Item label="Select A Car" value="0" />
                     {vehicles?.map((v) => (
                       <Picker.Item
                         key={v.id}
@@ -202,7 +202,7 @@ export default function EzpassesScreen({ session }: { session: Session }) {
                 </>
               )}
 
-              {ezNumber && password && selectedVehicle && (
+              {ezNumber && password && selectedVehicle != 0 && (
                 <View style={styles.modal_button}>
                   <Button
                     title={"Add EZ-Pass"}
