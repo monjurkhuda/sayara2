@@ -4,14 +4,27 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Session } from "@supabase/supabase-js";
 import AccountScreen from "../screens/AccountScreen";
-import SettingsScreen from "../screens/AccountScreen";
+import { useState, useEffect } from "react";
 import FleetScreen from "../screens/FleetScreen";
 import ViolationsScreen from "../screens/ViolationsScreen";
 import EzpassesScreen from "../screens/EzpassesScreen";
+import { supabase } from "../lib/supabase";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
   return (
     <Tab.Navigator
     // screenOptions={{
@@ -48,7 +61,8 @@ export default function BottomTabs() {
       />
       <Tab.Screen
         name="EZ-Passes"
-        component={EzpassesScreen}
+        //component={EzpassesScreen}
+        children={() => <EzpassesScreen session={session} />}
         options={{
           tabBarLabel: "EZ-Passes",
           tabBarIcon: ({ color, size }) => (
@@ -62,7 +76,8 @@ export default function BottomTabs() {
       />
       <Tab.Screen
         name="Account"
-        component={AccountScreen}
+        //component={AccountScreen}
+        children={() => <AccountScreen session={session} />}
         options={{
           tabBarLabel: "Account",
           tabBarIcon: ({ color, size }) => (

@@ -30,7 +30,7 @@ export default function ViolationsScreen() {
   return (
     <ScrollView style={styles.container}>
       {violations?.map((v) => (
-        <View style={styles.violation_div}>
+        <View style={styles.violation_div} key={v.id}>
           <View style={styles.firstLine}>
             {v.category == "ezpass" ? (
               <View style={styles.ezpassCircle}>

@@ -17,51 +17,112 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
+import { Session } from "@supabase/supabase-js";
 
-export default function EzpassesScreen() {
+export default function EzpassesScreen({ session }: { session: Session }) {
   const [ezpasses, setEzpasses] = useState<any[] | null>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [ezNumber, setEzNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [vehicles, setVehicles] = useState<any[] | null>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedVehicle, setSelectedVehicle] = useState();
 
   useEffect(() => {
-    getEzpasses();
-    getVehicles();
-  }, []);
+    if (session) {
+      getEzpasses();
+      getVehicles();
+    }
+  }, [session, modalVisible]);
 
   async function getEzpasses() {
-    let { data: ezpasses, error } = await supabase
-      .from("ezpasses")
-      .select(`*, vehicles(color, make, model, year, plate)`);
+    // let { data: ezpasses, error } = await supabase
+    //   .from("ezpasses")
+    //   .select(`*, vehicles(color, make, model, year, plate)`);
+    // setEzpasses(ezpasses);
+    // if (error) {
+    //   throw error;
+    // }
 
-    setEzpasses(ezpasses);
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
 
-    if (error) {
-      throw error;
+      let { data, error, status } = await supabase
+        .from("ezpasses")
+        .select(`*, vehicles(color, make, model, year, plate)`)
+        .eq("owner_id", session?.user.id);
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        setEzpasses(data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function getVehicles() {
-    let { data: vehicles, error } = await supabase
-      .from("vehicles")
-      .select("*")
-      .eq("owner_id", "226bf2c9-1917-448c-967c-cda0da46ddd9");
+    // let { data: vehicles, error } = await supabase
+    //   .from("vehicles")
+    //   .select("*")
+    //   .eq("owner_id", userid);
+    // setVehicles(vehicles);
+    // if (error) {
+    //   throw error;
+    // }
 
-    setVehicles(vehicles);
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
 
-    console.log(vehicles);
+      let { data, error, status } = await supabase
+        .from("vehicles")
+        .select(`*`)
+        .eq("owner_id", session?.user.id);
+      if (error && status !== 406) {
+        throw error;
+      }
 
-    if (error) {
-      throw error;
+      if (data) {
+        setVehicles(data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  async function addEzpass() {
+    const { data, error } = await supabase.from("ezpasses").insert([
+      {
+        number: ezNumber,
+        account_pass: password,
+        vehicle_id: selectedVehicle,
+        owner_id: session?.user.id,
+      },
+    ]);
+
+    setModalVisible(false);
+    setEzNumber("");
+    setPassword("");
+  }
+
+  console.log(ezpasses);
+
+  if (loading) {
+    return <></>;
   }
 
   return (
     <ScrollView style={styles.container}>
       {ezpasses?.map((e) => (
-        <View style={styles.fleet_div}>
+        <View style={styles.fleet_div} key={e.id}>
           <View style={styles.firstLine}>
             <Text style={styles.boldText}>EZ-Pass: {e.number}</Text>
           </View>
@@ -106,36 +167,48 @@ export default function EzpassesScreen() {
                 value={ezNumber}
                 placeholder="EZ-Pass Number"
                 placeholderTextColor="gray"
+                keyboardType="numeric"
               />
 
-              <TextInput
-                style={styles.input}
-                onChangeText={setPassword}
-                value={password}
-                placeholder="Account Password"
-                placeholderTextColor="gray"
-                secureTextEntry={true}
-              />
+              {ezNumber && (
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setPassword}
+                  value={password}
+                  placeholder="Account Password"
+                  placeholderTextColor="gray"
+                  secureTextEntry={true}
+                  textContentType="oneTimeCode"
+                />
+              )}
 
-              <Text>Choose Car:</Text>
+              {password && (
+                <>
+                  <Text>Choose Car:</Text>
+                  <Picker
+                    selectedValue={selectedVehicle}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedVehicle(itemValue)
+                    }
+                  >
+                    {vehicles?.map((v) => (
+                      <Picker.Item
+                        key={v.id}
+                        label={`${v.color} ${v.make} ${v.model} ${v.year}`}
+                        value={v.id}
+                      />
+                    ))}
+                  </Picker>
+                </>
+              )}
 
-              <Picker
-                selectedValue={selectedVehicle}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedVehicle(itemValue)
-                }
-              >
-                {vehicles?.map((v) => (
-                  <Picker.Item
-                    label={`${v.color} ${v.make} ${v.model} ${v.year}`}
-                    value={v.id}
-                  />
-                ))}
-              </Picker>
-
-              {ezNumber && password && (
+              {ezNumber && password && selectedVehicle && (
                 <View style={styles.modal_button}>
-                  <Button title={"Add EZ-Pass"} color={"white"}></Button>
+                  <Button
+                    title={"Add EZ-Pass"}
+                    color={"white"}
+                    onPress={addEzpass}
+                  ></Button>
                 </View>
               )}
             </View>

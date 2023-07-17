@@ -21,7 +21,7 @@ export default function FleetScreen() {
 
   useEffect(() => {
     getVehicles();
-  }, []);
+  }, [vehicles]);
 
   async function getVehicles() {
     let { data: vehicles, error } = await supabase.from("vehicles").select("*");
@@ -36,7 +36,7 @@ export default function FleetScreen() {
   return (
     <ScrollView style={styles.container}>
       {vehicles?.map((v) => (
-        <View style={styles.fleet_div}>
+        <View style={styles.fleet_div} key={v.id}>
           <View style={styles.firstLine}>
             <View>
               <FontAwesome5 name="car-side" size={24} color={v.color} />
