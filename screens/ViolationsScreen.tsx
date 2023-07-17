@@ -5,6 +5,7 @@ import { Divider } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
@@ -32,33 +33,62 @@ export default function ViolationsScreen() {
       {violations?.map((v) => (
         <View style={styles.violation_div} key={v.id}>
           <View style={styles.firstLine}>
-            {v.category == "ezpass" ? (
-              <View style={styles.ezpassCircle}>
-                <Text style={styles.circleText}>EZ</Text>
-              </View>
-            ) : (
-              <View style={styles.trafficCircle}>
-                <Entypo name="traffic-cone" size={20} color="white" />
-              </View>
+            {v.category == "ezpass" && (
+              <>
+                <View style={styles.ezpassCircle}>
+                  <Text style={styles.circleText}>EZ</Text>
+                </View>
+                <Text style={styles.boldText}>{v.description}</Text>
+                <Text>${v.payment_due}</Text>
+              </>
             )}
-            <Text style={styles.boldText}>{v.description}</Text>
-            <Text>${v.payment_due}</Text>
+
+            {v.category == "traffic" && (
+              <>
+                <View style={styles.trafficCircle}>
+                  <Entypo name="traffic-cone" size={20} color="white" />
+                </View>
+                <Text style={styles.boldText}>{v.description}</Text>
+                <Text>${v.payment_due}</Text>
+              </>
+            )}
+
+            {v.category == "inspection" && (
+              <>
+                <View style={styles.inspectionCirlce}>
+                  <MaterialCommunityIcons
+                    name="car-wrench"
+                    size={20}
+                    color="white"
+                  />
+                </View>
+                <Text style={styles.boldText}>{v.description}</Text>
+                <View style={styles.lineUnit}>
+                  <EvilIcons name="credit-card" size={24} color="black" />
+                  <Text>{v.plate}</Text>
+                </View>
+              </>
+            )}
           </View>
-          <Divider />
-          <View style={styles.secondLine}>
-            <View style={styles.secondLineUnit}>
-              <EvilIcons name="credit-card" size={24} color="black" />
-              <Text>{v.plate}</Text>
-            </View>
-            <View style={styles.secondLineUnit}>
-              <EvilIcons name="calendar" size={24} color="black" />
-              <Text>{v.date}</Text>
-            </View>
-            <View style={styles.secondLineUnit}>
-              <EvilIcons name="clock" size={24} color="black" />
-              <Text>{v.time}</Text>
-            </View>
-          </View>
+          {(v.category == "ezpass" || v.category == "traffic") && (
+            <>
+              <Divider />
+              <View style={styles.secondLine}>
+                <View style={styles.lineUnit}>
+                  <EvilIcons name="credit-card" size={24} color="black" />
+                  <Text>{v.plate}</Text>
+                </View>
+                <View style={styles.lineUnit}>
+                  <EvilIcons name="calendar" size={24} color="black" />
+                  <Text>{v.date}</Text>
+                </View>
+                <View style={styles.lineUnit}>
+                  <EvilIcons name="clock" size={24} color="black" />
+                  <Text>{v.time}</Text>
+                </View>
+              </View>
+            </>
+          )}
         </View>
       ))}
     </ScrollView>
@@ -82,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  secondLineUnit: {
+  lineUnit: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -122,6 +152,15 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     backgroundColor: "gray",
+    borderRadius: 100,
+  },
+  inspectionCirlce: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 34,
+    height: 34,
+    backgroundColor: "red",
     borderRadius: 100,
   },
   circleText: {
