@@ -44,16 +44,18 @@ export default function FleetScreen() {
             <Text style={styles.boldText}>
               {v.make} {v.model} {v.year}
             </Text>
-            <EvilIcons name="credit-card" size={24} color="black" />
-            <Text>{v.plate}</Text>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="credit-card" size={24} color="black" />
+              <Text>{v.plate}</Text>
+            </View>
           </View>
           <Divider />
           <View style={styles.secondLine}>
-            <View style={styles.secondLineUnit}>
+            <View style={styles.lineUnit}>
               <FontAwesome5 name="exclamation-circle" size={16} color="black" />
               <Text>Reg. Expires: {v.reg_expires}</Text>
             </View>
-            <View style={styles.secondLineUnit}>
+            <View style={styles.lineUnit}>
               <FontAwesome5 name="wrench" size={16} color="black" />
               <Text>Last Inspection: {v.last_inspection}</Text>
             </View>
@@ -160,10 +162,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 6,
   },
-  secondLineUnit: {
+  lineUnit: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    gap: 3,
   },
   violation_div: {
     display: "flex",

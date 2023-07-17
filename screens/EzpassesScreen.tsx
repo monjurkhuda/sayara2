@@ -113,7 +113,6 @@ export default function EzpassesScreen({ session }: { session: Session }) {
     setModalVisible(false);
     setEzNumber("");
     setPassword("");
-    setSelectedVehicle("0");
   }
 
   return (
@@ -125,13 +124,13 @@ export default function EzpassesScreen({ session }: { session: Session }) {
           </View>
           <Divider />
           <View style={styles.secondLine}>
-            <View style={styles.secondLineUnit}>
+            <View style={styles.lineUnit}>
               <FontAwesome5 name="car-side" size={18} color={e.color} />
               <Text>
                 {e.vehicles.make} {e.vehicles.model} {e.vehicles.year}
               </Text>
             </View>
-            <View style={styles.secondLineUnit}>
+            <View style={styles.lineUnit}>
               <EvilIcons name="credit-card" size={24} color="black" />
               <Text>{e.vehicles.plate}</Text>
             </View>
@@ -185,12 +184,9 @@ export default function EzpassesScreen({ session }: { session: Session }) {
                   <Picker
                     selectedValue={selectedVehicle}
                     onValueChange={(itemValue, itemIndex) => {
-                      if (itemValue !== 0) {
-                        setSelectedVehicle(itemValue);
-                      }
+                      setSelectedVehicle(itemValue);
                     }}
                   >
-                    <Picker.Item label="Select A Car" value="0" />
                     {vehicles?.map((v) => (
                       <Picker.Item
                         key={v.id}
@@ -202,7 +198,7 @@ export default function EzpassesScreen({ session }: { session: Session }) {
                 </>
               )}
 
-              {ezNumber && password && selectedVehicle != 0 && (
+              {ezNumber && password && selectedVehicle && (
                 <View style={styles.modal_button}>
                   <Button
                     title={"Add EZ-Pass"}
@@ -274,10 +270,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 6,
   },
-  secondLineUnit: {
+  lineUnit: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    gap: 3,
   },
   violation_div: {
     display: "flex",
