@@ -72,7 +72,14 @@ const CarChoiceInput = ({ setModalVisible }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.selectedInfoText}>
-        <Text style={{ color: selectedColor }}>{selectedColor}</Text>{" "}
+        <Text
+          style={{
+            color: selectedColor,
+            backgroundColor: selectedColor == "white" ? "black" : "white",
+          }}
+        >
+          {selectedColor}
+        </Text>{" "}
         {year?.getFullYear().toString()} {make} {model} {plate.toUpperCase()}{" "}
       </Text>
 

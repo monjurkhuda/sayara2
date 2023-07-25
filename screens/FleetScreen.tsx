@@ -12,7 +12,8 @@ import {
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 
 export default function FleetScreen() {
@@ -49,8 +50,13 @@ export default function FleetScreen() {
       {vehicles?.map((v) => (
         <View style={styles.fleet_div} key={v.id}>
           <View style={styles.firstLine}>
-            <View>
-              <FontAwesome5 name="car-side" size={24} color={v.color} />
+            <View
+              style={{
+                backgroundColor: v.color == "white" ? "black" : "white",
+              }}
+            >
+              <Ionicons name="ios-car-sport-sharp" size={22} color={v.color} />
+              {/* <FontAwesome5 name="car-side" size={18} color={v.color} /> */}
             </View>
             <Text style={styles.boldText}>
               {v.make} {v.model} {v.year}
