@@ -9,30 +9,102 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
+  const [vehicles, setVehicles] = useState<any[] | null>([]);
+  const [loading, setLoading] = useState(true);
+
+  let violationsArr = [];
 
   //https://data.cityofnewyork.us/resource/nc67-uf89.json?$where=amount_due%20%3E%200&plate=T792038C
 
   useEffect(() => {
     getViolations();
+    getVehicles();
   }, []);
 
   async function getViolations() {
-    let { data: violations, error } = await supabase
-      .from("violations")
-      .select("*");
+    try {
+      setLoading(true);
 
-    setViolations(violations);
+      vehicles?.forEach((vehicle) => {
+        fetch(
+          `https://data.cityofnewyork.us/resource/nc67-uf89.json?$where=amount_due%20%3E%200&plate=${vehicle.plate}`
+        )
+          .then((response) => response.json())
+          .then((json) => setViolations((prev) => [...prev, json]))
+          .catch((error) => console.error(error));
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+    // let { data: violations, error } = await supabase
+    //   .from("violations")
+    //   .select("*");
+
+    // setViolations(violations);
+
+    // if (error) {
+    //   throw error;
+    // }
+  }
+
+  async function getVehicles() {
+    let { data: vehicles, error } = await supabase.from("vehicles").select("*");
+
+    setVehicles(vehicles);
 
     if (error) {
       throw error;
     }
   }
 
+  violations?.forEach((vio) => {
+    // console.log(vio);
+    // console.log(typeof vio);
+
+    vio?.forEach((v) => {
+      if (Object.keys(v).length > 0) {
+        violationsArr.push(v);
+      }
+    });
+  });
+
+  console.log(violationsArr);
+
+  // console.log(vehicles, violations);
+
+  if (loading) return <></>;
+
   return (
     <ScrollView style={styles.container}>
-      {violations?.map((v) => (
-        <View style={styles.violation_div} key={v.id}>
+      {violationsArr?.map((v) => (
+        <View style={styles.violation_div} key={v.summons_number}>
           <View style={styles.firstLine}>
+            <View style={styles.trafficCircle}>
+              <Text style={styles.circleText}>EZ</Text>
+            </View>
+            <Text style={styles.boldText}>{v.violation}</Text>
+            <Text>${v.amount_due}</Text>
+          </View>
+          <Divider />
+          <View style={styles.secondLine}>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="credit-card" size={24} color="black" />
+              <Text>{v.plate}</Text>
+            </View>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="calendar" size={24} color="black" />
+              <Text>{v.issue_date}</Text>
+            </View>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="clock" size={24} color="black" />
+              <Text>{v.violation_time}</Text>
+            </View>
+          </View>
+
+          {/* <View style={styles.firstLine}>
             {v.category == "ezpass" && (
               <>
                 <View style={styles.ezpassCircle}>
@@ -88,7 +160,7 @@ export default function ViolationsScreen() {
                 </View>
               </View>
             </>
-          )}
+          )} */}
         </View>
       ))}
     </ScrollView>
