@@ -6,9 +6,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { formatDistance } from "date-fns";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
+  const [regExpirations, setRegExpirations] = useState<any[] | null>([]);
   const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +30,7 @@ export default function ViolationsScreen() {
       console.error(error);
     } finally {
       let allViolations = [];
+      let upcomingRegExpirations = [];
 
       if (vehicles) {
         for (const vehicle of vehicles) {
@@ -36,9 +39,26 @@ export default function ViolationsScreen() {
           );
           const json = await response.json();
           allViolations.push(...json);
+
+          var regExpiresDateParsed = new Date(vehicle.reg_expires);
+          var today = Date.now();
+          var thirtyDaysFromToday = new Date();
+          thirtyDaysFromToday.setDate(thirtyDaysFromToday.getDate() + 30);
+
+          var daysToExpireString = formatDistance(today, regExpiresDateParsed);
+
+          // console.log(thirtyDaysFromToday, regExpiresDateParsed);
+
+          var plateNo = vehicle.plate;
+
+          if (thirtyDaysFromToday > regExpiresDateParsed) {
+            console.log(thirtyDaysFromToday, regExpiresDateParsed);
+            upcomingRegExpirations.push({ plateNo, daysToExpireString });
+          }
         }
       }
       setViolations(allViolations);
+      setRegExpirations(upcomingRegExpirations);
       setLoading(false);
     }
 
@@ -46,6 +66,8 @@ export default function ViolationsScreen() {
       throw error;
     }
   }
+
+  // console.log(regExpirations);
 
   if (loading) return <Text>Loading...</Text>;
 
@@ -75,8 +97,31 @@ export default function ViolationsScreen() {
               <Text>{v.violation_time}</Text>
             </View>
           </View>
+        </View>
+      ))}
 
-          {/* <View style={styles.firstLine}>
+      {regExpirations?.map((r, i) => (
+        <View style={styles.violation_div} key={i}>
+          <View style={styles.firstLine}>
+            <View style={styles.inspectionCirlce}>
+              <MaterialCommunityIcons
+                name="file-settings"
+                size={20}
+                color="white"
+              />
+            </View>
+            <Text style={styles.boldText}>
+              Registration expiring in {r.daysToExpireString}
+            </Text>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="credit-card" size={24} color="black" />
+              <Text>{r.plateNo}</Text>
+            </View>
+          </View>
+        </View>
+      ))}
+
+      {/* <View style={styles.firstLine}>
             {v.category == "ezpass" && (
               <>
                 <View style={styles.ezpassCircle}>
@@ -133,8 +178,6 @@ export default function ViolationsScreen() {
               </View>
             </>
           )} */}
-        </View>
-      ))}
     </ScrollView>
   );
 }
