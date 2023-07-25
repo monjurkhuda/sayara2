@@ -55,7 +55,7 @@ export default function ViolationsScreen() {
         <View style={styles.violation_div} key={v.summons_number}>
           <View style={styles.firstLine}>
             <View style={styles.trafficCircle}>
-              <Text style={styles.circleText}>EZ</Text>
+              <Entypo name="traffic-cone" size={20} color="orange" />
             </View>
             <Text style={styles.boldText}>{v.violation}</Text>
             <Text>${v.amount_due}</Text>
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 34,
     height: 34,
-    backgroundColor: "gray",
+    backgroundColor: "#0B183D",
     borderRadius: 100,
   },
   inspectionCirlce: {
