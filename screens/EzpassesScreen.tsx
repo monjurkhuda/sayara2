@@ -117,6 +117,17 @@ export default function EzpassesScreen({ session }: { session: Session }) {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.button_container}>
+        <Pressable style={styles.add_button}>
+          <Text
+            style={styles.add_button_text}
+            onPress={() => setModalVisible(true)}
+          >
+            + Add EZ-Pass
+          </Text>
+        </Pressable>
+      </View>
+
       {ezpasses?.map((e) => (
         <View style={styles.fleet_div} key={e.id}>
           <View style={styles.firstLine}>
@@ -137,17 +148,6 @@ export default function EzpassesScreen({ session }: { session: Session }) {
           </View>
         </View>
       ))}
-
-      <View style={styles.button_container}>
-        <Pressable style={styles.add_button}>
-          <Text
-            style={styles.add_button_text}
-            onPress={() => setModalVisible(true)}
-          >
-            + Add EZ-Pass
-          </Text>
-        </Pressable>
-      </View>
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
   },
   button_container: {
     display: "flex",
-    width: "100%",
-    alignItems: "center",
+    width: "98%",
+    alignItems: "flex-end",
     marginTop: 20,
   },
   add_button: {
