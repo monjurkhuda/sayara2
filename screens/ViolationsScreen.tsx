@@ -12,74 +12,46 @@ export default function ViolationsScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [loading, setLoading] = useState(true);
 
-  let violationsArr = [];
-
   //https://data.cityofnewyork.us/resource/nc67-uf89.json?$where=amount_due%20%3E%200&plate=T792038C
 
   useEffect(() => {
     getViolations();
-    getVehicles();
   }, []);
 
   async function getViolations() {
-    try {
-      setLoading(true);
-
-      vehicles?.forEach((vehicle) => {
-        fetch(
-          `https://data.cityofnewyork.us/resource/nc67-uf89.json?$where=amount_due%20%3E%200&plate=${vehicle.plate}`
-        )
-          .then((response) => response.json())
-          .then((json) => setViolations((prev) => [...prev, json]))
-          .catch((error) => console.error(error));
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-
-    // let { data: violations, error } = await supabase
-    //   .from("violations")
-    //   .select("*");
-
-    // setViolations(violations);
-
-    // if (error) {
-    //   throw error;
-    // }
-  }
-
-  async function getVehicles() {
     let { data: vehicles, error } = await supabase.from("vehicles").select("*");
 
-    setVehicles(vehicles);
+    try {
+      setLoading(true);
+      setVehicles(vehicles);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      let allViolations = [];
+
+      if (vehicles) {
+        for (const vehicle of vehicles) {
+          const response = await fetch(
+            `https://data.cityofnewyork.us/resource/nc67-uf89.json?$where=amount_due%20%3E%200&plate=${vehicle.plate}`
+          );
+          const json = await response.json();
+          allViolations.push(...json);
+        }
+      }
+      setViolations(allViolations);
+      setLoading(false);
+    }
 
     if (error) {
       throw error;
     }
   }
 
-  violations?.forEach((vio) => {
-    // console.log(vio);
-    // console.log(typeof vio);
-
-    vio?.forEach((v) => {
-      if (Object.keys(v).length > 0) {
-        violationsArr.push(v);
-      }
-    });
-  });
-
-  console.log(violationsArr);
-
-  // console.log(vehicles, violations);
-
-  if (loading) return <></>;
+  if (loading) return <Text>Loading...</Text>;
 
   return (
     <ScrollView style={styles.container}>
-      {violationsArr?.map((v) => (
+      {violations?.map((v) => (
         <View style={styles.violation_div} key={v.summons_number}>
           <View style={styles.firstLine}>
             <View style={styles.trafficCircle}>
