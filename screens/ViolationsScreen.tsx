@@ -111,7 +111,7 @@ export default function ViolationsScreen() {
               />
             </View>
             <Text style={styles.boldText}>
-              Registration expiring in {r.daysToExpireString}
+              Registration expires in {r.daysToExpireString}
             </Text>
             <View style={styles.lineUnit}>
               <EvilIcons name="credit-card" size={24} color="black" />
