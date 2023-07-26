@@ -7,9 +7,11 @@ import {
   TextInput,
 } from "react-native";
 import DatePicker from "@dietime/react-native-date-picker";
-import { Button } from "react-native-elements";
+import { Button, Divider } from "react-native-elements";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
+import { EvilIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { format } from "date-fns";
 
 const CarChoiceInput = ({ setModalVisible }) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -19,7 +21,8 @@ const CarChoiceInput = ({ setModalVisible }) => {
   const [model, setModel] = useState<string>("");
   const [year, setYear] = useState<Date>();
   const [registrationExpires, setRegistrationExpires] = useState<Date>();
-  const [lastInspection, setLastInspection] = useState<Date>();
+  const [lastDmvInspection, setLastDmvInspection] = useState<Date>();
+  const [lastTlcInspection, setLastTlcInspection] = useState<Date>();
   const [curr, setCurr] = useState<string>("color");
 
   useEffect(() => {
@@ -57,7 +60,8 @@ const CarChoiceInput = ({ setModalVisible }) => {
           year: year?.getFullYear().toString(),
           plate: plate.toUpperCase(),
           reg_expires: registrationExpires,
-          last_inspection: lastInspection,
+          last_dmv_inspection: lastDmvInspection,
+          last_tlc_inspection: lastTlcInspection,
           owner_id: session?.user.id,
         },
       ])
@@ -71,34 +75,26 @@ const CarChoiceInput = ({ setModalVisible }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.selectedInfoText}>
-        <Text
+      <View style={styles.carInfoLine}>
+        <View
           style={{
-            color: selectedColor,
             backgroundColor: selectedColor == "white" ? "black" : "white",
+            borderRadius: 20,
+            padding: 6,
           }}
         >
-          {selectedColor}
-        </Text>{" "}
-        {year?.getFullYear().toString()} {make} {model} {plate.toUpperCase()}{" "}
-      </Text>
-
-      <View style={styles.detailsLine}>
-        {curr == "details" && registrationExpires && (
-          <Text>
-            Reg. Expires: {registrationExpires?.getMonth()}/
-            {registrationExpires?.getFullYear()}
-          </Text>
-        )}
-
-        {curr == "details" && lastInspection && (
-          <Text>
-            Last Inspection: {lastInspection?.getMonth()}/
-            {lastInspection?.getFullYear()}
-          </Text>
-        )}
+          <Ionicons
+            name="ios-car-sport-sharp"
+            size={22}
+            color={selectedColor}
+          />
+        </View>
+        <Text style={styles.selectedInfoText}>
+          {year?.getFullYear().toString()} {make} {model} {plate.toUpperCase()}{" "}
+        </Text>
       </View>
 
+      <Divider style={{ width: "100%" }} />
       {curr == "color" && (
         <>
           <Text style={styles.label}>Select Color:</Text>
@@ -120,7 +116,6 @@ const CarChoiceInput = ({ setModalVisible }) => {
           </View>
         </>
       )}
-
       {curr == "info" && (
         <TextInput
           style={styles.input}
@@ -130,7 +125,6 @@ const CarChoiceInput = ({ setModalVisible }) => {
           placeholderTextColor="gray"
         />
       )}
-
       {curr == "info" && make && (
         <TextInput
           style={styles.input}
@@ -142,20 +136,6 @@ const CarChoiceInput = ({ setModalVisible }) => {
       )}
 
       {curr == "info" && model && (
-        <>
-          <Text>Select Year...</Text>
-          <DatePicker
-            height={70}
-            fontSize={18}
-            startYear={1980}
-            value={year}
-            onChange={(value) => setYear(value)}
-            format="yyyy"
-          />
-        </>
-      )}
-
-      {curr == "details" && (
         <TextInput
           style={styles.input}
           onChangeText={setPlate}
@@ -165,13 +145,29 @@ const CarChoiceInput = ({ setModalVisible }) => {
         />
       )}
 
-      {plate && (
+      {curr == "carYear" && (
+        <>
+          <Text>Select Year...</Text>
+          <DatePicker
+            height={70}
+            fontSize={18}
+            startYear={1980}
+            endYear={2030}
+            value={year}
+            onChange={(value) => setYear(value)}
+            format="yyyy"
+          />
+        </>
+      )}
+
+      {curr == "regExpires" && (
         <>
           <Text>Registration Expires</Text>
           <DatePicker
             height={70}
             fontSize={18}
-            startYear={2022}
+            startYear={2020}
+            endYear={2030}
             value={registrationExpires}
             onChange={(value) => setRegistrationExpires(value)}
             format="mm-yyyy"
@@ -179,25 +175,59 @@ const CarChoiceInput = ({ setModalVisible }) => {
         </>
       )}
 
-      {registrationExpires && (
+      {curr == "lastDmvInsp" && (
         <>
-          <Text>Last Inspection</Text>
+          <Text>Last DMV Inspection</Text>
           <DatePicker
             height={70}
             fontSize={18}
             startYear={2000}
-            value={lastInspection}
-            onChange={(value) => setLastInspection(value)}
-            format="mm-yyyy"
+            endYear={2030}
+            value={lastDmvInspection}
+            onChange={(value) => setLastDmvInspection(value)}
+            format="mm-dd-yyyy"
           />
         </>
       )}
 
-      {curr == "info" && year && (
-        <Button title={"Next >"} onPress={() => setCurr("details")}></Button>
+      {curr == "lastTlcInsp" && (
+        <>
+          <Text>Last TLC Inspection</Text>
+          <DatePicker
+            height={70}
+            fontSize={18}
+            startYear={2000}
+            endYear={2030}
+            value={lastTlcInspection}
+            onChange={(value) => setLastTlcInspection(value)}
+            format="mm-dd-yyyy"
+          />
+        </>
       )}
 
-      {curr == "details" && lastInspection && (
+      {curr == "info" && plate && (
+        <Button title={"Next >"} onPress={() => setCurr("carYear")}></Button>
+      )}
+
+      {curr == "carYear" && year && (
+        <Button title={"Next >"} onPress={() => setCurr("regExpires")}></Button>
+      )}
+
+      {curr == "regExpires" && registrationExpires && (
+        <Button
+          title={"Next >"}
+          onPress={() => setCurr("lastDmvInsp")}
+        ></Button>
+      )}
+
+      {curr == "lastDmvInsp" && lastDmvInspection && (
+        <Button
+          title={"Next >"}
+          onPress={() => setCurr("lastTlcInsp")}
+        ></Button>
+      )}
+
+      {curr == "lastTlcInsp" && lastTlcInspection && (
         <Button title={"Add Car"} onPress={addVehicle}></Button>
       )}
     </View>
@@ -207,7 +237,13 @@ const CarChoiceInput = ({ setModalVisible }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    padding: 20,
+    padding: 10,
+  },
+  carInfoLine: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     width: "90%",
@@ -245,20 +281,16 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 25,
   },
-  selectedColorText: {
-    marginTop: 20,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   selectedInfoText: {
-    marginTop: 20,
     fontSize: 16,
     fontWeight: "bold",
+    marginLeft: 4,
   },
   detailsLine: {
     display: "flex",
     flexDirection: "row",
-    gap: 20,
+    flexWrap: "wrap",
+    gap: 10,
   },
 });
 

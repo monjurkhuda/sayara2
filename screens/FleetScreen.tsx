@@ -11,9 +11,8 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {} from "@expo/vector-icons";
+import { EvilIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 
 export default function FleetScreen() {
@@ -53,6 +52,8 @@ export default function FleetScreen() {
             <View
               style={{
                 backgroundColor: v.color == "white" ? "black" : "white",
+                borderRadius: v.color == "white" ? 20 : 0,
+                padding: v.color == "white" ? 6 : 0,
               }}
             >
               <Ionicons name="ios-car-sport-sharp" size={22} color={v.color} />
@@ -160,7 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "94%",
   },
-
   firstLine: {
     display: "flex",
     flexDirection: "row",
