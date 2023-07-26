@@ -76,6 +76,10 @@ export default function FleetScreen() {
               <FontAwesome5 name="wrench" size={16} color="black" />
               <Text>DMV Inspected: {v.last_dmv_inspection}</Text>
             </View>
+            <View style={styles.lineUnit}>
+              <FontAwesome5 name="wrench" size={16} color="black" />
+              <Text>TLC Inspected: {v.last_tlc_inspection}</Text>
+            </View>
           </View>
         </View>
       ))}

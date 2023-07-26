@@ -3,15 +3,24 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Divider } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addMonths, formatDistance, formatDistanceToNow } from "date-fns";
+import {
+  EvilIcons,
+  MaterialIcons,
+  Entypo,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
+import {
+  addMonths,
+  addYears,
+  formatDistance,
+  formatDistanceToNow,
+} from "date-fns";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
   const [regExpirations, setRegExpirations] = useState<any[] | null>([]);
   const [dmvInspections, setDmvInspections] = useState<any[] | null>([]);
+  const [tlcInspections, setTlcInspections] = useState<any[] | null>([]);
   const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +42,7 @@ export default function ViolationsScreen() {
       let allViolations = [];
       let upcomingRegExpirations = [];
       let upcomingDmvInspections = [];
+      let upcomingTlcInspections = [];
 
       if (vehicles) {
         for (const vehicle of vehicles) {
@@ -72,11 +82,27 @@ export default function ViolationsScreen() {
               daysTillDmvInspectionString,
             });
           }
+
+          //Populating tlc inspection in < 30 days alerts
+          var lastTlcInspection = new Date(vehicle.last_tlc_inspection);
+          var lastTlcInspectionPlusTwoYears = addYears(lastTlcInspection, 2);
+          var daysTillTlcInspectionString = formatDistanceToNow(
+            lastTlcInspectionPlusTwoYears,
+            { addSuffix: true }
+          );
+
+          if (thirtyDaysFromToday > lastTlcInspectionPlusTwoYears) {
+            upcomingTlcInspections.push({
+              plateNo,
+              daysTillTlcInspectionString,
+            });
+          }
         }
       }
       setViolations(allViolations);
       setRegExpirations(upcomingRegExpirations);
       setDmvInspections(upcomingDmvInspections);
+      setTlcInspections(upcomingTlcInspections);
       setLoading(false);
     }
 
@@ -151,6 +177,23 @@ export default function ViolationsScreen() {
             <View style={styles.lineUnit}>
               <EvilIcons name="credit-card" size={24} color="black" />
               <Text>{d.plateNo}</Text>
+            </View>
+          </View>
+        </View>
+      ))}
+
+      {tlcInspections?.map((t, i) => (
+        <View style={styles.violation_div} key={i}>
+          <View style={styles.firstLine}>
+            <View style={styles.tlcInspectionCirlce}>
+              <MaterialIcons name="taxi-alert" size={20} color="black" />
+            </View>
+            <Text style={styles.boldText}>
+              TLC inspection due {t.daysTillTlcInspectionString}
+            </Text>
+            <View style={styles.lineUnit}>
+              <EvilIcons name="credit-card" size={24} color="black" />
+              <Text>{t.plateNo}</Text>
             </View>
           </View>
         </View>
@@ -293,6 +336,16 @@ const styles = StyleSheet.create({
     height: 34,
     backgroundColor: "red",
     borderRadius: 100,
+  },
+  tlcInspectionCirlce: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 34,
+    height: 34,
+    backgroundColor: "yellow",
+    borderRadius: 100,
+    borderWidth: 1,
   },
   circleText: {
     color: "white",
