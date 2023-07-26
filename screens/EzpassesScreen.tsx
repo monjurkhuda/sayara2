@@ -200,11 +200,7 @@ export default function EzpassesScreen({ session }: { session: Session }) {
 
               {ezNumber && password && selectedVehicle && (
                 <View style={styles.modal_button}>
-                  <Button
-                    title={"Add EZ-Pass"}
-                    color={"white"}
-                    onPress={addEzpass}
-                  ></Button>
+                  <Button title={"Add EZ-Pass"} onPress={addEzpass}></Button>
                 </View>
               )}
             </View>
@@ -224,10 +220,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     backgroundColor: "white",
-    marginTop: 14,
+    marginTop: 6,
     marginLeft: 14,
     marginRight: 14,
-    padding: 20,
+    marginBottom: 6,
+    padding: 12,
     gap: 8,
     borderRadius: 30,
     letterSpacing: 2,
