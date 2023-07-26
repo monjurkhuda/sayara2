@@ -6,7 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addMonths, formatDistance } from "date-fns";
+import { addMonths, formatDistance, formatDistanceToNow } from "date-fns";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
@@ -49,7 +49,9 @@ export default function ViolationsScreen() {
 
           //Populating reg expires in < 30 days alerts
           var regExpiresDateParsed = new Date(vehicle.reg_expires);
-          var daysToExpireString = formatDistance(today, regExpiresDateParsed);
+          var daysToExpireString = formatDistanceToNow(regExpiresDateParsed, {
+            addSuffix: true,
+          });
 
           if (thirtyDaysFromToday > regExpiresDateParsed) {
             upcomingRegExpirations.push({ plateNo, daysToExpireString });
@@ -58,9 +60,9 @@ export default function ViolationsScreen() {
           //Populating dmv inspection in < 30 days alerts
           var lastDmvInspection = new Date(vehicle.last_dmv_inspection);
           var lastDmvInspectionPlusFourMonths = addMonths(lastDmvInspection, 4);
-          var daysTillDmvInspectionString = formatDistance(
-            today,
-            lastDmvInspectionPlusFourMonths
+          var daysTillDmvInspectionString = formatDistanceToNow(
+            lastDmvInspectionPlusFourMonths,
+            { addSuffix: true }
           );
 
           if (thirtyDaysFromToday > lastDmvInspectionPlusFourMonths) {
@@ -127,7 +129,7 @@ export default function ViolationsScreen() {
               />
             </View>
             <Text style={styles.boldText}>
-              Registration expires in {r.daysToExpireString}
+              Reg. expiration {r.daysToExpireString}
             </Text>
             <View style={styles.lineUnit}>
               <EvilIcons name="credit-card" size={24} color="black" />
@@ -144,7 +146,7 @@ export default function ViolationsScreen() {
               <MaterialCommunityIcons name="tools" size={20} color="white" />
             </View>
             <Text style={styles.boldText}>
-              DMV inspection in {d.daysTillDmvInspectionString}
+              DMV inspection due {d.daysTillDmvInspectionString}
             </Text>
             <View style={styles.lineUnit}>
               <EvilIcons name="credit-card" size={24} color="black" />
