@@ -13,8 +13,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, FontAwesome5 } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
 import { Session } from "@supabase/supabase-js";

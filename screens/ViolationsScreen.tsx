@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Divider } from "react-native-elements";
-import { AntDesign } from "@expo/vector-icons";
 import {
   EvilIcons,
   MaterialIcons,
@@ -15,6 +14,7 @@ import {
   formatDistance,
   formatDistanceToNow,
 } from "date-fns";
+import EmptyFeed from "../components/EmptyFeed";
 
 export default function ViolationsScreen() {
   const [violations, setViolations] = useState<any[] | null>([]);
@@ -111,9 +111,12 @@ export default function ViolationsScreen() {
     }
   }
 
-  // console.log(regExpirations);
-
   if (loading) return <Text>Loading...</Text>;
+
+  if (violations && violations.length < 1)
+    return (
+      <EmptyFeed message="Add vehicles and EZ-Passes to see violations and alerts." />
+    );
 
   return (
     <ScrollView style={styles.container}>

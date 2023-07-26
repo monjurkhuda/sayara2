@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
-import {} from "@expo/vector-icons";
 import { EvilIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 
