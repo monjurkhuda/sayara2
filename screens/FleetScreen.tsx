@@ -123,7 +123,7 @@ export default function FleetScreen() {
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
               <Pressable onPress={() => setVehicleModalVisible(false)}>
-                <Text>Cancel</Text>
+                <Text>Close</Text>
               </Pressable>
               <VehicleModal vehicleid={vehicleModalId} />
             </View>
