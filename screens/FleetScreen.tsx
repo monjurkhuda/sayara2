@@ -13,10 +13,13 @@ import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
 import { EvilIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
+import VehicleModal from "../components/VehicleModal";
 
 export default function FleetScreen() {
   const [vehicles, setVehicles] = useState<any[] | null>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [vehicleModalVisible, setVehicleModalVisible] = useState(false);
+  const [vehicleModalId, setVehicleModalId] = useState<string | undefined>();
 
   useEffect(() => {
     getVehicles();
@@ -30,6 +33,11 @@ export default function FleetScreen() {
     if (error) {
       throw error;
     }
+  }
+
+  function launchVehicleModal(vehicleid: string) {
+    setVehicleModalVisible(true);
+    setVehicleModalId(vehicleid);
   }
 
   return (
@@ -46,42 +54,51 @@ export default function FleetScreen() {
       </View>
 
       {vehicles?.map((v) => (
-        <View style={styles.fleet_div} key={v.id}>
-          <View style={styles.firstLine}>
-            <View
-              style={{
-                backgroundColor: v.color == "white" ? "black" : "white",
-                borderRadius: v.color == "white" ? 20 : 0,
-                padding: v.color == "white" ? 6 : 0,
-              }}
-            >
-              <Ionicons name="ios-car-sport-sharp" size={22} color={v.color} />
-              {/* <FontAwesome5 name="car-side" size={18} color={v.color} /> */}
+        <Pressable onPress={() => launchVehicleModal(v.id)} key={v.id}>
+          <View style={styles.fleet_div}>
+            <View style={styles.firstLine}>
+              <View
+                style={{
+                  backgroundColor: v.color == "white" ? "black" : "white",
+                  borderRadius: v.color == "white" ? 20 : 0,
+                  padding: v.color == "white" ? 6 : 0,
+                }}
+              >
+                <Ionicons
+                  name="ios-car-sport-sharp"
+                  size={22}
+                  color={v.color}
+                />
+              </View>
+              <Text style={styles.boldText}>
+                {v.make} {v.model} {v.year}
+              </Text>
+              <View style={styles.lineUnit}>
+                <EvilIcons name="credit-card" size={24} color="black" />
+                <Text>{v.plate}</Text>
+              </View>
             </View>
-            <Text style={styles.boldText}>
-              {v.make} {v.model} {v.year}
-            </Text>
-            <View style={styles.lineUnit}>
-              <EvilIcons name="credit-card" size={24} color="black" />
-              <Text>{v.plate}</Text>
+            <Divider />
+            <View style={styles.secondLine}>
+              <View style={styles.lineUnit}>
+                <FontAwesome5
+                  name="exclamation-circle"
+                  size={16}
+                  color="black"
+                />
+                <Text>Reg. Expires: {v.reg_expires}</Text>
+              </View>
+              <View style={styles.lineUnit}>
+                <FontAwesome5 name="wrench" size={16} color="black" />
+                <Text>DMV Inspected: {v.last_dmv_inspection}</Text>
+              </View>
+              <View style={styles.lineUnit}>
+                <FontAwesome5 name="wrench" size={16} color="black" />
+                <Text>TLC Inspected: {v.last_tlc_inspection}</Text>
+              </View>
             </View>
           </View>
-          <Divider />
-          <View style={styles.secondLine}>
-            <View style={styles.lineUnit}>
-              <FontAwesome5 name="exclamation-circle" size={16} color="black" />
-              <Text>Reg. Expires: {v.reg_expires}</Text>
-            </View>
-            <View style={styles.lineUnit}>
-              <FontAwesome5 name="wrench" size={16} color="black" />
-              <Text>DMV Inspected: {v.last_dmv_inspection}</Text>
-            </View>
-            <View style={styles.lineUnit}>
-              <FontAwesome5 name="wrench" size={16} color="black" />
-              <Text>TLC Inspected: {v.last_tlc_inspection}</Text>
-            </View>
-          </View>
-        </View>
+        </Pressable>
       ))}
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
@@ -92,6 +109,23 @@ export default function FleetScreen() {
                 <Text>Cancel</Text>
               </Pressable>
               <CarChoiceInput setModalVisible={setModalVisible} />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <Modal
+        visible={vehicleModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Pressable onPress={() => setVehicleModalVisible(false)}>
+                <Text>Cancel</Text>
+              </Pressable>
+              <VehicleModal vehicleid={vehicleModalId} />
             </View>
           </View>
         </TouchableWithoutFeedback>
