@@ -107,8 +107,6 @@ export default function EzpassesScreen({ session }: { session: Session }) {
       },
     ]);
 
-    console.log(error);
-
     setModalVisible(false);
     setEzNumber("");
     setPassword("");

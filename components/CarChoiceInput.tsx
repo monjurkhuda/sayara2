@@ -67,9 +67,6 @@ const CarChoiceInput = ({ setModalVisible }) => {
       ])
       .select();
 
-    console.log(data);
-    console.log(error);
-
     setModalVisible(false);
   }
 
