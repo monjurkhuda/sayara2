@@ -13,7 +13,12 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
-import { EvilIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import {
+  EvilIcons,
+  Ionicons,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import VehicleModal from "../components/VehicleModal";
 
@@ -125,7 +130,12 @@ export default function FleetScreen() {
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
               <Pressable onPress={() => setModalVisible(false)}>
-                <Text>Cancel</Text>
+                <MaterialCommunityIcons
+                  name="close-circle"
+                  size={30}
+                  color="red"
+                />
+                <Text>Close</Text>
               </Pressable>
               <CarChoiceInput setModalVisible={setModalVisible} />
             </View>
@@ -142,6 +152,11 @@ export default function FleetScreen() {
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
               <Pressable onPress={() => setVehicleModalVisible(false)}>
+                <MaterialCommunityIcons
+                  name="close-circle"
+                  size={30}
+                  color="red"
+                />
                 <Text>Close</Text>
               </Pressable>
               <VehicleModal vehicleid={vehicleModalId} />

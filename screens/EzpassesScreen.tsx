@@ -13,7 +13,11 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { EvilIcons, FontAwesome5 } from "@expo/vector-icons";
+import {
+  EvilIcons,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
 import { Session } from "@supabase/supabase-js";
@@ -151,7 +155,12 @@ export default function EzpassesScreen({ session }: { session: Session }) {
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
               <Pressable onPress={() => setModalVisible(false)}>
-                <Text>Cancel</Text>
+                <MaterialCommunityIcons
+                  name="close-circle"
+                  size={30}
+                  color="red"
+                />
+                <Text>Close</Text>
               </Pressable>
 
               <TextInput
