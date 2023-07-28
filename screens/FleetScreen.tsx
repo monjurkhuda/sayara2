@@ -49,8 +49,6 @@ export default function FleetScreen() {
         .delete()
         .eq("id", vehicleid);
 
-      console.log("asadsda");
-
       if (error) {
         throw error;
       }
@@ -155,7 +153,6 @@ export default function FleetScreen() {
                 Alert.alert("Delete Vehicle", "Are you sure?", [
                   {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
                     style: "cancel",
                   },
                   {

@@ -76,7 +76,6 @@ export default function ViolationsScreen() {
           );
 
           if (thirtyDaysFromToday > lastDmvInspectionPlusFourMonths) {
-            console.log(lastDmvInspectionPlusFourMonths, lastDmvInspection);
             upcomingDmvInspections.push({
               plateNo,
               daysTillDmvInspectionString,
