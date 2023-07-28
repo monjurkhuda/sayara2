@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   AntDesign,
   EvilIcons,
@@ -122,7 +129,7 @@ export default function EmptyFeed({ vehicleid }: Props) {
   if (loading) return <Text>Loading...</Text>;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {vehicle && vehicle.length > 0 && (
         <>
           <Text
@@ -197,7 +204,7 @@ export default function EmptyFeed({ vehicleid }: Props) {
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -205,6 +212,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     marginTop: 30,
+    marginBottom: 30,
     gap: 10,
     flexWrap: "wrap",
   },

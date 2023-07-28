@@ -8,6 +8,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
+  Button,
+  Alert,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import CarChoiceInput from "../components/CarChoiceInput";
@@ -38,6 +40,25 @@ export default function FleetScreen() {
   function launchVehicleModal(vehicleid: string) {
     setVehicleModalVisible(true);
     setVehicleModalId(vehicleid);
+  }
+
+  async function deleteVehicle(vehicleid: string | undefined) {
+    try {
+      const { error } = await supabase
+        .from("vehicles")
+        .delete()
+        .eq("id", vehicleid);
+
+      console.log("asadsda");
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setVehicleModalVisible(false);
   }
 
   return (
@@ -127,6 +148,23 @@ export default function FleetScreen() {
               </Pressable>
               <VehicleModal vehicleid={vehicleModalId} />
             </View>
+            <Button
+              title="X Delete Vehicle"
+              color={"darkred"}
+              onPress={() =>
+                Alert.alert("Delete Vehicle", "Are you sure?", [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Yes, Delete",
+                    onPress: () => deleteVehicle(vehicleModalId),
+                  },
+                ])
+              }
+            ></Button>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
